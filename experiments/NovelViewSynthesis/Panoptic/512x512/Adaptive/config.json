@@ -1,0 +1,15 @@
+{
+  "root": "/path/to/datasets/Panoptic",
+  "sequences": null,
+  "train_intervals": null,
+  "val_intervals": null,
+  "test_intervals": null,
+  "in_views": null,
+  "out_views": null,
+  "max_epochs": 400,
+  "limit_train_batches": 2048,
+  "limit_val_batches": 256,
+  "max_batch_size_per_gpu": 4,
+  "seed": 42069,
+  "precision": 32
+}

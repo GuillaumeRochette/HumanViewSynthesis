@@ -1,0 +1,13 @@
+{
+  "d_embedding": 2048,
+  "dropout": 0.1,
+  "input_resolution": 256,
+  "rendering_resolution": 256,
+  "target_resolution": 512,
+  "appearance_features": 16,
+  "base_channels": 64,
+  "image_loss": "lpips",
+  "batch_size": 32,
+  "lr": 0.002,
+  "wd": 0.01
+}

@@ -1,0 +1,10 @@
+{
+  "root": "/path/to/datasets/Human3.6M",
+  "known_sequences": null,
+  "train_intervals": null,
+  "unknown_sequences": null,
+  "views": null,
+  "max_epochs": 200,
+  "max_batch_size_per_gpu": 1024,
+  "seed": 42069
+}

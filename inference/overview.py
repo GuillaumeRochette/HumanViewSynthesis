@@ -96,7 +96,8 @@ def main():
         shutil.rmtree(tmp_dir)
 
     f2i = Features2Image(num_channels=3)
-    ratio = litmodel.hparams.rendering_resolution / litmodel.hparams.target_resolution
+    ratio = litmodel.hparams.target_resolution / litmodel.hparams.rendering_resolution
+    m, M = None, None
 
     for input in tqdm(dataloader):
         input = RecursiveMunch.fromDict(input)
@@ -108,11 +109,14 @@ def main():
         input = move(input, cpu)
         output = move(output, cpu)
 
+        input.A.pose_3d.p = input.A.pose_3d.root.p + input.A.pose_3d.relative.p
+        input.A.pose_3d.c = input.A.pose_3d.root.c & input.A.pose_3d.relative.c
+
         output.A.figure_2d = draw_limbs(
             image=input.A.image.clone(),
             points=input.A.pose_2d.p,
             confidences=input.A.pose_2d.c,
-            edges=litmodel.edges,
+            edges=litmodel.hparams.edges,
         )
         output.A.figure_3d = draw_limbs(
             image=input.A.image.clone(),
@@ -122,22 +126,25 @@ def main():
                 dist_coef=input.A.dist_coef[..., None, :],
             ),
             confidences=input.A.pose_3d.c,
-            edges=litmodel.edges,
+            edges=litmodel.hparams.edges,
         )
         output.B.figure_3d = draw_limbs(
             image=input.B.image.clone(),
             points=perspective_projection(
-                xyz=input.B.pose_3d.p,
+                xyz=output.B.pose_3d.p,
                 K=input.B.K[..., None, :, :],
                 dist_coef=input.B.dist_coef[..., None, :],
             ),
-            confidences=input.B.pose_3d.c,
-            edges=litmodel.edges,
+            confidences=torch.ones_like(input.A.pose_3d.c),
+            edges=litmodel.hparams.edges,
         )
         output.B.render = f2i(output.B.render)
-        m, _ = output.B.render.min(dim=-3, keepdim=True)
-        M, _ = output.B.render.max(dim=-3, keepdim=True)
+        if m is None:
+            m = output.B.render.min()
+        if M is None:
+            M = output.B.render.max()
         output.B.render = (output.B.render - m) / (M - m + 1e-8)
+        output.B.render = F.interpolate(output.B.render, scale_factor=ratio)
 
         for i, key in enumerate(input.key):
             name = f"{int(key):012d}.png"
@@ -176,8 +183,8 @@ def main():
             )
             save(
                 image=F.pad(
-                    output.B.render[i],
-                    pad=(input.B.stabilized_padding[i] * ratio).tolist(),
+                    output.B.render[i].clamp(min=0.0, max=1.0),
+                    pad=input.B.stabilized_padding[i].tolist(),
                     value=1.0,
                 ),
                 path=tmp_dir / "Render_B" / name,

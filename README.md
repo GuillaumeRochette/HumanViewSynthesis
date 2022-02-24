@@ -108,7 +108,10 @@ python inference/motion_transfer.py \
 ```
 
 ## Pre-trained Models
-Coming soon.
+Download the following models and place them in their correspoding directories:
+- [Human36M.256x256.LPIPS.ckpt](https://github.com/GuillaumeRochette/HumanViewSynthesis/releases/download/v0.0.1-alpha/Human36M.256x256.LPIPS.ckpt) in
+`experiments/NovelViewSynthesis/Human36M/256x256/LPIPS`.
+- [Panoptic.512x512.LPIPS.ckpt](https://github.com/GuillaumeRochette/HumanViewSynthesis/releases/download/v0.0.1-alpha/Panoptic.512x512.LPIPS.ckpt) in `experiments/NovelViewSynthesis/Panoptic/512x512/LPIPS`.
 
 ## Visualise the Renderer's Output
 

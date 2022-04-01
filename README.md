@@ -17,6 +17,18 @@ https://arxiv.org/abs/2111.12731
 - Motion Transfer between Actors: https://youtu.be/sbY34nnDy2M
 - Paper Presentation (12'): https://youtu.be/Sxwpsi9TDOs
 
+---
+## Table of Contents
+
+1. [Requirements](#requirements)
+2. [Preparing Datasets](#preparing-datasets)
+3. [Training](#training)
+4. [Inference](#inference)
+5. [Pre-trained Models](#pre-trained-models)
+6. [Visualise the Renderer's Output](#visualise-the-renderers-output)
+7. [Citation](#citation)
+
+---
 ## Requirements
 
 1. Install Miniconda: https://docs.conda.io/en/latest/miniconda.html
